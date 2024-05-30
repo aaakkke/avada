@@ -15,11 +15,6 @@ const router = createRouter({
         component: () => import('../views/查询.vue')
       },
       {
-        path: '沪市主板',
-        name: '沪市主板',
-        component: () => import('../views/沪市主板.vue')
-      },
-      {
         path: '策略',
         name: '策略',
         component: () => import('../views/策略.vue')
