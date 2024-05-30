@@ -1,15 +1,7 @@
 <template>
-    <div class="about">
-      <h1>这里是设置界面</h1>
-    </div>
-  </template>
-  
-  <style>
-  @media (min-width: 1024px) {
-    .about {
-      min-height: 100vh;
-      display: flex;
-      align-items: center;
-    }
-  }
-  </style>
+  <div class="about">
+    <h1>这里是设置界面</h1>
+  </div>
+</template>
+
+<style></style>

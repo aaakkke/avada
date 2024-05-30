@@ -9,19 +9,22 @@
   --vt-c-black-mute: #282828;
 
   --vt-c-indigo: #2c3e50;
-
+/*边框、分界线颜色*/
   --vt-c-divider-light-1: rgba(60, 60, 60, 0.29);
   --vt-c-divider-light-2: rgba(60, 60, 60, 0.12);
   --vt-c-divider-dark-1: rgba(84, 84, 84, 0.65);
   --vt-c-divider-dark-2: rgba(84, 84, 84, 0.48);
-
+/*文本颜色*/
   --vt-c-text-light-1: var(--vt-c-indigo);
   --vt-c-text-light-2: rgba(60, 60, 60, 0.66);
   --vt-c-text-dark-1: var(--vt-c-white);
   --vt-c-text-dark-2: rgba(235, 235, 235, 0.64);
 }
 
-/* semantic color variables for this project */
+/* 
+semantic color variables for this project 
+再定义
+*/
 :root {
   --color-background: var(--vt-c-white);
   --color-background-soft: var(--vt-c-white-soft);
@@ -36,6 +39,11 @@
   --section-gap: 160px;
 }
 
+/*
+通过@media (prefers-color-scheme: dark)查询
+设置暗色模式下的颜色变量
+允许网站根据用户系统的颜色偏好自动切换到暗色或亮色模式
+*/
 @media (prefers-color-scheme: dark) {
   :root {
     --color-background: var(--vt-c-black);
@@ -50,6 +58,12 @@
   }
 }
 
+/*
+设置所有元素的box-sizing为border-box
+使得元素的宽度和高度的计算包括了padding和border
+清除了所有元素的默认margin
+*/
+
 *,
 *::before,
 *::after {
@@ -58,6 +72,11 @@
   font-weight: normal;
 }
 
+/*
+设置了文本颜色、背景色、字体族和其他一些全局性的样式属性。
+颜色和背景颜色的过渡动画
+字体的抗锯齿效果
+*/
 body {
   min-height: 100vh;
   color: var(--color-text);

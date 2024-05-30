@@ -1,32 +1,43 @@
-@import './base.css';
+@import './base.css';/*导入通用的网页css样式*/
 
+/*选择页面中id=app的模块*/
 #app {
-  max-width: 1280px;
-  margin: 0 auto;
-  padding: 2rem;
-  font-weight: normal;
+  width: 100%; /*宽度最大化*/
+  min-height: 100vh;  /*至少全屏高度*/
+  margin: 0 auto;/*设置元素的外边距。上下外边距为 0，左右外边距自动（使元素在水平方向居中）*/
+  padding: 2rem; /*元素内边距*/
+  font-weight: normal;/*粗细正常*/
 }
 
+/*组合选择器，既适用于所有 <a> 标签，也适用于所有类名为 green 的元素。*/
 a,
 .green {
-  text-decoration: none;
-  color: hsla(160, 100%, 37%, 1);
-  transition: 0.4s;
-  padding: 3px;
+  text-decoration: none;/*移除文本的下划线*/
+  color: hsla(160, 100%, 37%, 1);/*设置文本颜色为鲜绿色，使用 HSLA 颜色格式*/
+  transition: 0.4s;/*设置过渡效果的持续时间为 0.4 秒，通常用于平滑颜色、背景等属性的变化*/
+  padding: 3px;/*内边距3像素*/
 }
 
+/*媒体查询，用于检测设备是否支持鼠标悬停。*/
 @media (hover: hover) {
+  /*设置当鼠标悬停在链接上时，链接的背景色变为半透明的鲜绿色*/
   a:hover {
     background-color: hsla(160, 100%, 37%, 0.2);
   }
 }
 
+/*另一个媒体查询，当视口宽度至少为 1024 像素时生效*/
 @media (min-width: 1024px) {
+  /*设置 <body> 元素为弹性盒子布局，并使其中的项目居中对齐*/
   body {
     display: flex;
     place-items: center;
   }
-
+  /* 
+  修改 ID 为 app 的元素的布局为网格布局
+  定义两列，每列占用可用空间的一半
+  内边距调整为水平方向上 2 rem
+  */
   #app {
     display: grid;
     grid-template-columns: 1fr 1fr;
