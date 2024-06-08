@@ -22,18 +22,25 @@ const router = createRouter({
       {
         path: '策略',
         name: '策略',
-        component: () => import('../views/策略.vue')
+        component: () => import('../views/策略.vue'),
+        children: [
+          {
+            path: '编辑',
+            name: '编辑',
+            component: () => import('../views/策略编辑.vue')
+            },
+        ],
       },
       {
         path: '交易',
         name: '交易',
         component: () => import('../views/交易.vue')
-        },
-        {
-          path: '持仓',
-          name: '持仓',
-          component: () => import('../views/持仓.vue')
-        },
+      },
+      {
+        path: '持仓',
+        name: '持仓',
+        component: () => import('../views/持仓.vue')
+      },
       {
         path: '设置',
         name: '设置',
