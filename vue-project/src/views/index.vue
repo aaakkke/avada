@@ -1,3 +1,4 @@
+<!--登录后的主界面-->
 <template>
   <div class="common-layout">
     <el-container>
@@ -14,7 +15,7 @@
         </el-row>
       </el-header>
       <el-container>
-        <el-aside width="200px">
+        <el-aside width="200px" class="aside-scroll">
           <el-col>
             <el-menu default-active="1" class="el-menu-vertical-demo">
               <el-sub-menu index="1">
@@ -22,22 +23,38 @@
                   <el-icon><Search /></el-icon>
                   <span>查询</span>
                 </template>
-                <RouterLink :to="{ name: '查询' }" class="menu-link">
+                <RouterLink :to="{ name: '查询', query: { board: 'sh' } }" class="menu-link">
                   <el-menu-item index="1-1">沪市主板</el-menu-item>
                 </RouterLink>
-                <el-menu-item index="1-2">深市主板</el-menu-item>
-                <el-menu-item index="1-3">科创板</el-menu-item>
-                <el-menu-item index="1-4">创业板</el-menu-item>
+                <RouterLink :to="{ name: '查询', query: { board: 'sz' } }" class="menu-link">
+                  <el-menu-item index="1-2">深市主板</el-menu-item>
+                </RouterLink>
+                <RouterLink :to="{ name: '查询', query: { board: 'cy' } }" class="menu-link">
+                  <el-menu-item index="1-3">科创板</el-menu-item>
+                </RouterLink>
+                <RouterLink :to="{ name: '查询', query: { board: 'kc' } }" class="menu-link">
+                  <el-menu-item index="1-4">创业板</el-menu-item>
+                </RouterLink>
               </el-sub-menu>
-              <el-menu-item index="2">
-                <el-icon><Document /></el-icon>
-                <span>策略</span>
-              </el-menu-item>
-              <el-menu-item index="3">
-                <el-icon><Coin /></el-icon>
-                <span>交易</span>
-              </el-menu-item>
-              <el-menu-item index="4">
+              <RouterLink :to="{ name: '策略' }" class="menu-link">
+                <el-menu-item index="2">
+                  <el-icon><Document /></el-icon>
+                  <span>策略</span>
+                </el-menu-item>
+              </RouterLink>
+              <RouterLink :to="{ name: '交易' }" class="menu-link">
+                <el-menu-item index="3">
+                  <el-icon><Coin /></el-icon>
+                  <span>交易</span>
+                </el-menu-item>
+              </RouterLink>
+              <RouterLink :to="{ name: '持仓' }" class="menu-link">
+                <el-menu-item index="4">
+                  <el-icon><Files /></el-icon>
+                  <span>持仓情况</span>
+                </el-menu-item>
+              </RouterLink>
+              <el-menu-item index="5">
                 <el-icon><setting /></el-icon>
                 <span>设置</span>
               </el-menu-item>
@@ -52,7 +69,7 @@
   </div>
 </template>
 <script lang="ts" setup>
-import { Document, Search, Coin, Setting } from '@element-plus/icons-vue';
+import { Document, Search, Coin, Setting, Files } from '@element-plus/icons-vue';
 </script>
 <style lang="scss">
 .underline-row {
@@ -86,5 +103,9 @@ import { Document, Search, Coin, Setting } from '@element-plus/icons-vue';
 }
 .el-menu-vertical-demo {
   width: 100%;
+}
+.aside-scroll {
+  overflow-y: auto; /* 启用垂直滚动条 */
+  height: calc(100vh - 60px); /* 计算高度以适应页面布局 */
 }
 </style>
