@@ -1,19 +1,28 @@
 from flask import Flask, request, jsonify
-import sqlite3
+import mysql.connector
 from werkzeug.security import generate_password_hash, check_password_hash
 
 app = Flask(__name__)
 
-# 创建数据库并初始化用户表
-conn = sqlite3.connect('users.db')
-c = conn.cursor()
-c.execute('''CREATE TABLE IF NOT EXISTS users
-             (id INTEGER PRIMARY KEY AUTOINCREMENT, username TEXT, password TEXT,risk INTEGER,fund INTEGER)''')
-conn.commit()
-conn.close()
+# 连接到MySQL数据库
+mysql_conn = mysql.connector.connect(
+    host='LAPTOP-KE',
+    user='root',
+    password='Zhangke123',
+)
+mysql_cursor = mysql_conn.cursor()
+# 创建数据库
+mysql_cursor.execute("CREATE DATABASE IF NOT EXISTS user")
+mysql_conn.commit()
 
+# 切换到用户数据库
+mysql_cursor.execute("USE user")
+
+# 创建用户表
+mysql_cursor.execute("CREATE TABLE IF NOT EXISTS users (id INT AUTO_INCREMENT PRIMARY KEY, username VARCHAR(255) UNIQUE NOT NULL, password VARCHAR(255) NOT NULL, risk INT, fund FLOAT)")
+mysql_conn.commit()
 # 注册用户
-@app.route('/register', methods=['POST','GET'])
+@app.route('/register', methods=['POST'])
 def register():
     try:
         data = request.get_json()
@@ -21,51 +30,40 @@ def register():
         password = data.get('password')
         risk_level = data.get('risk_level')
         fund = data.get('initial_fund')
-        print(data)
     except Exception as e:
         return jsonify({'error': 'Invalid JSON format'}), 400
 
-    conn = sqlite3.connect('users.db')
-    c = conn.cursor()
-
     # 检查用户名是否已存在
-    c.execute("SELECT * FROM users WHERE username=?", (username,))
-    user = c.fetchone()
+    mysql_cursor.execute("SELECT * FROM users WHERE username=%s", (username,))
+    user = mysql_cursor.fetchone()
     if user:
-        conn.close()
         return jsonify({'message': 'Username already exists'}), 400
 
     # 对密码进行哈希处理后存储
     hashed_password = generate_password_hash(password)
-    c.execute("INSERT INTO users (username, password, risk, fund) VALUES (?, ?, ?, ?)", (username, hashed_password,risk_level,fund))
-    conn.commit()
-    conn.close()
+    mysql_cursor.execute("INSERT INTO users (username, password, risk, fund) VALUES (%s, %s, %s, %s)", (username, hashed_password, risk_level, fund))
+    mysql_conn.commit()
 
     return jsonify({'message': 'User registered successfully'}), 201
 
 # 用户登录
-@app.route('/login', methods=['POST','GET'])
+@app.route('/login', methods=['POST'])
 def login():
     data = request.get_json()
     username = data.get('username')
     password = data.get('password')
 
-    conn = sqlite3.connect('users.db')
-    c = conn.cursor()
-
     # 获取用户信息
-    c.execute("SELECT * FROM users WHERE username=?", (username,))
-    user = c.fetchone()
+    mysql_cursor.execute("SELECT * FROM users WHERE username=%s", (username,))
+    user = mysql_cursor.fetchone()
 
     if user and check_password_hash(user[2], password):  # 检查密码是否匹配
-        conn.close()
         return jsonify({'message': 'Login successful'}), 200
     else:
-        conn.close()
         return jsonify({'message': 'Invalid username or password'}), 401
 
-#用户设置:为了实现特定身份验证，用户无法修改用户名
-@app.route('/set',methods=['POST','GET'])
+# 用户设置
+@app.route('/set',methods=['POST'])
 def set():
     try:
         data = request.get_json()
@@ -76,30 +74,25 @@ def set():
     except Exception as e:
         return jsonify({'error': 'Invalid JSON format'}), 400
 
-    conn = sqlite3.connect('users.db')
-    c = conn.cursor()
-
     # 获取用户信息
-    c.execute("SELECT * FROM users WHERE username=?", (username,))
-    user = c.fetchone()
+    mysql_cursor.execute("SELECT * FROM users WHERE username=%s", (username,))
+    user = mysql_cursor.fetchone()
 
     if not user:
-        conn.close()
         return jsonify({'message': 'User not found'}), 404
 
     # 更新用户信息
     if password:
         hashed_password = generate_password_hash(password)
-        c.execute("UPDATE users SET password=? WHERE username=?", (hashed_password, username))
+        mysql_cursor.execute("UPDATE users SET password=%s WHERE username=%s", (hashed_password, username))
 
     if risk_level:
-        c.execute("UPDATE users SET risk=? WHERE username=?", (risk_level, username))
+        mysql_cursor.execute("UPDATE users SET risk=%s WHERE username=%s", (risk_level, username))
 
     if fund:
-        c.execute("UPDATE users SET fund=? WHERE username=?", (fund, username))
+        mysql_cursor.execute("UPDATE users SET fund=%s WHERE username=%s", (fund, username))
 
-    conn.commit()
-    conn.close()
+    mysql_conn.commit()
 
     return jsonify({'message': 'User information updated successfully'}), 200
 
