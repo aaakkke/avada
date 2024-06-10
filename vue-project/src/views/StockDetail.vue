@@ -2,7 +2,7 @@
 <template>
   <div>
     <h1>股票详情</h1>
-    <div style="height: 100vh; overflow-y: auto">
+    <div style="height: calc(100vh - 70px); overflow-y: auto">
       <canvas id="volumeChart" style="height: 100vh"></canvas>
       <canvas id="turnoverChart" style="height: 100vh"></canvas>
       <canvas id="highPriceChart" style="height: 100vh"></canvas>

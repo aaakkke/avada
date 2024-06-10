@@ -48,20 +48,14 @@
                   <span>交易</span>
                 </el-menu-item>
               </RouterLink>
-              <RouterLink :to="{ name: '持仓' }" class="menu-link">
-                <el-menu-item index="4">
-                  <el-icon><Files /></el-icon>
-                  <span>持仓情况</span>
-                </el-menu-item>
-              </RouterLink>
-              <el-menu-item index="5">
+              <el-menu-item index="4">
                 <el-icon><setting /></el-icon>
                 <span>设置</span>
               </el-menu-item>
             </el-menu>
           </el-col>
         </el-aside>
-        <el-main>
+        <el-main class="common-layout" style="padding: 0%">
           <RouterView />
         </el-main>
       </el-container>
@@ -80,6 +74,7 @@ import { Document, Search, Coin, Setting, Files } from '@element-plus/icons-vue'
   flex-direction: column; /* 子元素垂直排列 */
   height: 100%; /* 高度占满父元素 */
   width: 100%; /* 宽度占满父元素 */
+  padding: 0; /* 移除可能的内边距 */
 }
 .menu-link {
   display: block; /* 使链接填充整个容器 */
