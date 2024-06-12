@@ -1,5 +1,6 @@
 <template>
   <div class="flex gap-4 mb-4">
+    <div style="height: 10px"></div>
     <span>请输入股票代码 </span>
     <el-input v-model="input" style="width: 240px" placeholder="Please input">
       <template #append>
@@ -8,7 +9,7 @@
     </el-input>
   </div>
   <div>
-    <el-table :data="paginatedData" :default-sort="{ prop: '股票代码', order: 'descending' }" style="width: 100%" height="380">
+    <el-table v-loading="loading" :data="paginatedData" :default-sort="{ prop: '股票代码', order: 'descending' }" style="width: 100%" height="380">
       <el-table-column fixed type="index" width="50" />
       <el-table-column fixed prop="股票代码" label="代码" sortable width="100" />
       <el-table-column prop="名称" label="名称" width="180" />
@@ -37,16 +38,19 @@
 </template>
 
 <script lang="ts" setup>
-import { ref, onMounted, computed } from 'vue';
+import { ref, onMounted, computed, onUnmounted } from 'vue';
 import { Search } from '@element-plus/icons-vue';
 import axios from 'axios';
 import { useRouter, useRoute } from 'vue-router'; // 引入useRouter
+import { ElLoading } from 'element-plus'; // 引入 ElLoading
 
+const loading = ref(false); // 添加 loading 状态
 const input = ref('');
 const tableData = ref([]);
 const currentPage = ref(1);
 const pageSize = ref(30);
 const totalItems = ref(0);
+const refreshInterval = ref<ReturnType<typeof setInterval> | null>(null);
 const router = useRouter(); // 使用useRouter
 const route = useRoute(); // 获取路由实例
 
@@ -75,7 +79,7 @@ const paginatedData = computed(() => {
 });
 
 const handleDetailClick = (code) => {
-  router.push(`/stock/${code}`);
+  router.push(`/index/stock/${code}`);
 };
 
 const handleCurrentChange = (newPage) => {
@@ -83,33 +87,43 @@ const handleCurrentChange = (newPage) => {
   fetchStockData();
 };
 
-const handleClick = () => {
-  console.log('click');
-};
-
 onMounted(() => {
   fetchStockData();
+  refreshInterval.value = setInterval(fetchStockData, 10000);
 });
 
 const fetchStockData = async () => {
   const type1 = boardType.value;
+  loading.value = true; // 显示加载效果
   try {
     if (input.value) {
       //股票查询
       const response = await axios.post('http://127.0.0.1:5000/stock_select', { code: input.value, type: type1 });
       console.log(response.data);
-      tableData.value = response.data.stock;
-      totalItems.value = response.data.stock.length;
+      tableData.value = response.data.stock_select;
+      totalItems.value = response.data.stock_select.length;
+      loading.value = false; // 隐藏加载效果
     } else {
       //显示所有股票信息
       const response = await axios.post('http://127.0.0.1:5000/stock', { type: type1 });
       tableData.value = response.data.stock;
       totalItems.value = response.data.stock.length;
+      loading.value = false; // 隐藏加载效果
     }
   } catch (error) {
     console.error('获取股票数据时发生错误：', error);
   }
 };
+onUnmounted(() => {
+  if (refreshInterval.value) {
+    clearInterval(refreshInterval.value);
+  }
+});
+onUnmounted(() => {
+  if (loading.value) {
+    loading.value = false;
+  }
+});
 </script>
 
 <style>

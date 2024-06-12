@@ -1,12 +1,17 @@
-//配置子路由界面的路径
 import { createRouter, createWebHistory } from 'vue-router';
 import index from '@/views/index.vue';
+import login from '@/views/login.vue';
+import register from '@/views/Register.vue';
 
 const router = createRouter({
   history: createWebHistory(),
   routes: [
     {
       path: '/',
+      redirect: '/login', // 将默认路径重定向到login
+    },
+    {
+      path: '/index',
       name: 'index',
       component: index,
       children: [
@@ -24,7 +29,6 @@ const router = createRouter({
           path: '策略',
           name: '策略',
           component: () => import('../views/策略.vue'),
-         
         },
         {
           path: '策略代码/:name',
@@ -42,6 +46,16 @@ const router = createRouter({
           component: () => import('../views/设置.vue'),
         },
       ],
+    },
+    {
+      path: '/login',
+      name: 'login',
+      component: login,
+    },
+    {
+      path: '/register',
+      name: 'register',
+      component: register,
     },
   ],
 });

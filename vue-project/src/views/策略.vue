@@ -57,7 +57,7 @@
 
     <el-button type="primary" plain @click="saveSelection"> 保存选用 </el-button>
     <el-dialog v-model="dialogVisible" title="提示" width="500">
-      <span>您已经成功保存修改</span>
+      <span>您已经成功保存修改！</span>
       <template #footer>
         <div class="dialog-footer">
           <el-button type="primary" @click="dialogVisible = false">关闭</el-button>
@@ -77,7 +77,7 @@ const tableData = ref([]);
 const dialogVisible = ref(false);
 
 const editItem = (row: any) => {
-  router.push(`/策略代码/${row.name}`);
+  router.push(`/index/策略代码/${row.name}`);
 };
 
 onMounted(() => {

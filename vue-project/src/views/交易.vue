@@ -1,6 +1,6 @@
 <template>
   <div class="about" style="height: calc(100vh - 60px); overflow-y: auto">
-    <div class="table-gap"></div>
+    <div style="margin-top: 20px"></div>
     <el-button type="primary" :icon="CirclePlus" round plain @click="toggleForm">添加交易</el-button>
     <el-button type="primary" :icon="DocumentCopy" round plain @click="fetchAssetInfo">资产交易信息</el-button>
 
@@ -36,8 +36,13 @@
           <!-- 忽略策略名称 -->
           <template v-if="key !== '策略名称'">
             <el-form-item :label="key">
-              <!-- 使用普通输入框展示参数值 -->
-              <el-input v-model="strategyParameters[key]" />
+              <!-- 根据值的类型选择展示的输入框 -->
+              <template v-if="typeof strategyParameters[key] === 'number'">
+                <el-input-number v-model.number="strategyParameters[key]" />
+              </template>
+              <template v-else>
+                <el-input v-model="strategyParameters[key]" />
+              </template>
             </el-form-item>
           </template>
         </template>
@@ -46,7 +51,7 @@
       <el-form-item>
         <el-button type="primary" @click="onSubmit">提交交易订单</el-button>
         <el-dialog v-model="dialogVisible" title="提示" width="500">
-          <span>您已经成功保存修改</span>
+          <span>您的订单已成功交易！</span>
           <template #footer>
             <div class="dialog-footer">
               <el-button type="primary" @click="closeDialogAndClearForm">关闭</el-button>
@@ -64,7 +69,7 @@
       </el-row>
       <el-row class="my-2">
         <el-col :span="24">
-          <el-text>现有资产: {{ assetData.currentAssets }} / 总资产: {{ assetData.totalAssets }}</el-text>
+          <el-text>现有资产: {{ assetData.currentAssets }} / 初始资产: {{ assetData.totalAssets }}</el-text>
         </el-col>
       </el-row>
       <el-row class="my-2">
@@ -107,6 +112,7 @@ const assetData = reactive({
 
 function toggleForm() {
   showForm.value = !showForm.value;
+  showAssetInfo.value = false;
   if (!showForm.value) {
     // 如果表单被关闭，则重置状态和策略参数
     value1.value = false; // 默认不使用策略
@@ -117,7 +123,7 @@ function resetStrategyParameters() {
   // 设置默认策略参数，当策略开关为关闭状态时
   Object.assign(strategyParameters, {
     买入卖出: '买入',
-    资金: 10000,
+    总交易手数: 10,
     策略名称: 'None', // 这将在UI中不显示
     股票代码: '600036.SS',
   });
@@ -143,7 +149,7 @@ async function fetchStrategies(newValue) {
     // 当开关关闭时，设置默认参数
     Object.assign(strategyParameters, {
       买入卖出: '买入',
-      初始资金: 10000,
+      总交易手数: 10,
       策略名称: 'None',
       股票代码: '600036.SS',
     });
@@ -193,7 +199,7 @@ async function submitStrategyParameters() {
     const response = await axios.post('http://127.0.0.1:5000/submit_strategy', { strategyParameter: strategyParameters });
     console.log('Response from server:', response.data);
     // 可以在这里添加任何后续逻辑，比如清空表单、显示成功消息等
-    if (response.data.state === 'successfully') {
+    if (response.data.message === 'successfully') {
       // 根据后端返回的状态显示对话框
       dialogVisible.value = true;
     }

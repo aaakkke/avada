@@ -1,8 +1,11 @@
 <template>
   <el-container style="width: 100%">
     <el-header style="padding: 0; height: 40px" class="underline-row">
-      <el-row :gutter="0" style="height: 40px">
-        <el-col :span="24" style="border-right: 1px solid gainsboro; border-radius: 0; display: flex; justify-content: center; align-items: center">代码详情</el-col>
+      <el-row :gutter="0" style="height: 40px; display: flex; align-items: center">
+        <el-col :span="2" style="border-right: 1px solid gainsboro; border-radius: 0; display: flex; justify-content: center; align-items: center">
+          <el-button @click="goBack" type="primary" plain>返回</el-button>
+        </el-col>
+        <el-col :span="22" style="border-right: 1px solid gainsboro; border-radius: 0; display: flex; justify-content: center; align-items: center"> 代码详情 </el-col>
       </el-row>
     </el-header>
     <el-main style="padding: 0; height: 100vh">
@@ -17,11 +20,13 @@
 
 <script>
 import { onMounted, ref } from 'vue';
-import { useRoute } from 'vue-router';
+import { useRoute, useRouter } from 'vue-router';
 import axios from 'axios';
+
 export default {
   setup() {
     const route = useRoute();
+    const router = useRouter();
     const codeText = ref(null); // 初始化为 null
 
     onMounted(async () => {
@@ -31,7 +36,7 @@ export default {
 
     async function fetchStockDetails(name) {
       try {
-        const response = await axios.post('http://127.0.0.1:5000/strategy', { name: name });
+        const response = await axios.post('http://127.0.0.1:5000/strategy', { name });
         let data = response.data.strategy;
         console.log('Strategy Data:', data); // 打印查看data的具体内容和类型
 
@@ -51,8 +56,13 @@ export default {
       }
     }
 
+    function goBack() {
+      router.push('/index/策略'); // 跳转到策略页面
+    }
+
     return {
       codeText,
+      goBack,
     };
   },
 };

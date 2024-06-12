@@ -1,7 +1,10 @@
-<!-- 股票图像 -->
 <template>
   <div>
-    <h1>股票详情</h1>
+    <div style="height: 10px"></div>
+    <div style="display: flex; align-items: center; margin-left: 5px">
+      <el-button @click="goBack" type="primary" plain>返回</el-button>
+      <h1 style="margin-left: 20px">股票详情</h1>
+    </div>
     <div style="height: calc(100vh - 70px); overflow-y: auto">
       <canvas id="volumeChart" style="height: 100vh"></canvas>
       <canvas id="turnoverChart" style="height: 100vh"></canvas>
@@ -15,12 +18,13 @@
 
 <script setup>
 import { onMounted, ref, nextTick } from 'vue';
-import { useRoute } from 'vue-router';
+import { useRoute, useRouter } from 'vue-router';
 import axios from 'axios';
 import Chart from 'chart.js/auto';
 
 // 使用useRoute来获取路由信息
 const route = useRoute();
+const router = useRouter();
 const stockData = ref([]);
 
 onMounted(async () => {
@@ -126,7 +130,12 @@ function createChart(canvasId, label, labels, data, borderColor) {
     },
   });
 }
+
+function goBack() {
+  router.push('/index/查询'); // 根据您的路由结构调整路径
+}
 </script>
+
 <style>
 canvas {
   width: 100% !important;

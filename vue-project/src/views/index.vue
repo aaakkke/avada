@@ -4,13 +4,11 @@
     <el-container>
       <el-header>
         <el-row :gutter="20" class="underline-row">
-          <el-col :span="6"
-            ><div class="grid-content ep-bg-purple" />
-            Avada量化交易平台</el-col
-          >
+          <el-col :span="6">
+            <img src="@/assets/logo.png" alt="Avada量化交易平台 LOGO" style="width: 120px; height: 57px" />
+          </el-col>
           <el-col :span="6" :offset="12">
-            <div class="grid-content ep-bg-purple" />
-            exit
+            <el-button style="margin-top: 30px; margin-left: 200px; font-size: 16px" @click="goBack" type="primary" plain text>退出</el-button>
           </el-col>
         </el-row>
       </el-header>
@@ -48,10 +46,12 @@
                   <span>交易</span>
                 </el-menu-item>
               </RouterLink>
-              <el-menu-item index="4">
-                <el-icon><setting /></el-icon>
-                <span>设置</span>
-              </el-menu-item>
+              <RouterLink :to="{ name: '设置' }" class="menu-link">
+                <el-menu-item index="4">
+                  <el-icon><setting /></el-icon>
+                  <span>设置</span>
+                </el-menu-item>
+              </RouterLink>
             </el-menu>
           </el-col>
         </el-aside>
@@ -63,7 +63,13 @@
   </div>
 </template>
 <script lang="ts" setup>
+import { useRouter } from 'vue-router';
 import { Document, Search, Coin, Setting, Files } from '@element-plus/icons-vue';
+const router = useRouter();
+
+function goBack() {
+  router.push('/login');
+}
 </script>
 <style lang="scss">
 .underline-row {
